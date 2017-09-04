@@ -1,14 +1,14 @@
 {
   "name": "tb-social",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Social client",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository" : { 
-    "type" : "git",
-    "url" : "https://github.com/toroback/tb-social.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toroback/tb-social.git"
   },
   "author": "",
   "license": "ISC"
