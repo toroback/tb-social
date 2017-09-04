@@ -26,6 +26,8 @@
  * @class
  */
 
+let App;
+let log;
 
 class Client {
   constructor(options, Adapter) {
@@ -45,6 +47,98 @@ class Client {
     return this.adapter.peopleGet(userId);
   }
   
+  static setup(app){
+    return new Promise((resolve,reject)=>{
+      App = app;
+      log = App.log.child({module:'social'});
+
+      log.debug("iniciando Módulo social");
+
+      require("./routes")(app);
+    
+      resolve();
+
+    });
+  }
+
+  static forService(service, accessToken, accessSecret){
+    return new Promise((resolve, reject) => {
+
+      if (!App)
+        throw new Error('setup() needs to be called first');
+      let credentials
+      let options;
+      let adapter;
+      let client;
+      if(service){
+        switch (service) {
+          case "facebook":
+            credentials = App.socialOptions.fb;
+            if(!credentials || !credentials.secretKey || !credentials.clientId)
+               throw new Error('fb options must be configured');
+
+            adapter = require('tb-social-facebook');
+            options = {
+              appId      : credentials.clientId, 
+              appSecret  : credentials.secretKey,
+              accessToken: accessToken,
+              timeout    : 2 * 1000 
+            }
+        
+            break;
+          case "twitter":
+           credentials = App.socialOptions.tw;
+            if(!credentials || !credentials.secretKey || !credentials.clientId)
+               throw new Error('tw options must be configured');
+
+            adapter = require('tb-social-twitter');
+            options = {
+              consumerKey         : credentials.clientId, 
+              consumerSecret      : credentials.secretKey,
+              accessToken         : accessToken,
+              accessTokenSecret   : accessSecret,
+              timeout             : 60*1000
+            }
+            break;
+          case "gplus":
+            credentials = App.socialOptions.gplus;
+            if(!credentials || !credentials.secretKey || !credentials.clientId)
+               throw new Error('gplus options must be configured');
+
+            adapter = require('tb-social-googleplus');
+            options = {
+              clientId      : credentials.clientId, 
+              clientSecret  : credentials.secretKey,
+              accessToken   : accessToken,
+              idToken       : accessSecret
+            }
+            break;
+          case "linkedin":
+           credentials = App.socialOptions.linkedin;
+            if(!credentials || !credentials.secretKey || !credentials.clientId)
+               throw new Error('linkedin options must be configured');
+
+            adapter = require('tb-social-linkedin');
+            options = {
+              clientId      : credentials.clientId, 
+              clientSecret  : credentials.secretKey,
+              accessToken   : accessToken
+            }
+            break;
+        }
+      }
+      if(options && adapter){
+        client = new Client(options,adapter);
+      }
+
+      if(client){
+        resolve(client);
+      }else{
+        reject(new Error('Service not exists'));
+      }
+    });
+  }
+
 }
 
 
