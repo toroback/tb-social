@@ -15,28 +15,36 @@ Módulos de servicios:
   
   La configuración de cualquier servicio se realizar en el archivo config.json que se encuentra en la carpeta "app". Para ellos hay que incluir y modificar un objeto llamado *"socialOptions"* y agregar un objeto interno para cada servicio que se utilizará que contendrá las credenciales. La clave de cada objeto será especial para cada servicio usando las siguientes claves para cada servicio:
 
-  - Facebook -> "fb"
-  - Twitter -> "tw"
-  - Google+ -> "gplus"
+  - Facebook -> "facebook"
+  - Twitter  -> "twitter"
+  - Google+  -> "gplus"
   - LinkedIn -> "linkedin"
 
-  La información que contendrá cada objeto es la siguiente:
+  La información que contendrá cada objeto depende del servicio, pero en general todos necesitan:
 
-  - "clientId"  : Id de la aplicación registsrada en el servicio.
-  - "secretKey" : Clave secreta de la aplicación registsrada en el servicio.
+  - Un identificador de la aplicación registsrada en el servicio.
+  - Una clave secreta de la aplicación registsrada en el servicio.
 
-  Un ejemplo de configuración de facebook y twitter sería el siguiente:
+  El nombre para cada uno de dichos campos para cada servicio, se muestra junto con un ejemplo a continuación:
 
   ```
   ...
   "socialOptions": {
-    "fb": {
-      "clientId": myFacebookClientId,
-      "secretKey": myFacebookSecretKey
+    "facebook": {
+      "appId": myFacebookClientId,
+      "appSecret": myFacebookSecretKey
     },
-    "tw": {
-      "clientId": myTwitterClientId,
-      "secretKey": myTwitterSecretKey
+    "twitter": {
+      "consumerKey": myTwitterClientId,
+      "consumerSecret": myTwitterSecretKey
+    },
+    "gplus": {
+      "clientId": myGPlusClientId,
+      "clientSecret": myGPlusSecretKey
+    },
+    "linkedin": {
+      "clientId": myLinkedInClientId,
+      "clientSecret": myLinkedInSecretKey
     }
   }
   ...
