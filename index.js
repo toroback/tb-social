@@ -1,4 +1,4 @@
-/**
+/*
  * The Client class provides a unified social client. It
  * supports post, get and delete
  *
@@ -23,30 +23,82 @@
  *   clientSecret   : 'NV24gdfghGmjBGH',
  *   accessToken    : 'AQXAi98EVoOverrergzOd2fgdNrX34qIHSeLAjtHCZgAWlV2inhf5_ETCw_fdV7oergergWqLTFiot8CfyAxs8RKzn5'
  * 
- * @class
  */
+
+
+/** 
+ * @module tb-social
+ *
+ * @description 
+ *
+ * <p>
+ * Esta módulo permite realizar publicaciones en distintas redes sociales como Facebook, Twitter, Google Plus y LinkedIn
+ * 
+ * Módulos relacionados con tb-social:
+ * <ul>
+ * <li> tb-social-facebook </li>
+ * <li> tb-social-twitter </li>
+ * <li> tb-social-gplus </li>
+ * <li> tb-social-linkedin </li>
+ * </ul>
+ * <p>
+ * 
+ * @see [Guía de uso]{@tutorial tb-social} para más información.
+ * @see [REST API]{@link module:tb-social/routes} (API externo).
+ * @see [Class API]{@link module:tb-social.Client} (API interno).
+ * @see Repositorio en {@link https://github.com/toroback/tb-social|GitHub}.
+ * </p>
+ * 
+ * Modulo de Social
+ *
+ * @module tb-social 
+ */
+
 
 let App;
 let log;
 
+/**
+ * Clase que representa un gestor de redes sociales
+ * @memberOf module:tb-social
+ */
 class Client {
+
+  /**
+   * Crea un gestor de redes sociales. Utilizar los modulos tb-social-facebook, tb-social-twitter, etc…
+   * @param  {Object} options        Objeto con las credenciales requeridas por el servicio. 
+   * @param  {Object} Adapter        Adapter del servicio que se va a utilizar. 
+   */
   constructor(options, Adapter) {
     this.options = options || {};
     this.adapter = new Adapter(this);
   }
+
   /**
    * Publica en la página del usuario post sencillo con mensaje y url
-   * @param  {Mixed} options {message:"mensaje", link:"http://www.jah.com"}
+   * @param  {Object} options Opciones del post
+   * @param  {String} options.message Mensaje que se va a publicar
+   * @param  {String} [options.link] Link que se incluirá en la publicación
    * @return {Mixed} Respuesta que varía según el servicio
    */
   post(options) {
     return this.adapter.post(options);
   }
 
+  /**
+   * Obtiene los amigos para el usuario indicado si el servicio dispone de dicha funcionalidad
+   * @param  {String} userId Id del usuario en el servicio
+   * @return {Promise<Object>} Promesa con el resultado
+   */
   peopleGet(userId){
     return this.adapter.peopleGet(userId);
   }
   
+  /**
+   * Setup del módulo. Debe ser llamado antes de crear una instancia
+   * @param {Object} _app Objeto App del servidor
+   * @return {Promise} Una promesa
+   */
   static setup(app){
     return new Promise((resolve,reject)=>{
       App = app;
@@ -61,6 +113,13 @@ class Client {
     });
   }
 
+  /**
+   * Obtiene un gestor de redes sociales ya configurado para un servicio indicado tomando la configuración del archivo de configuración del servidor(config.json).
+   * @param  {String} service      El servicio para el que se quiere crear el gestor
+   * @param  {String} accessToken  Access token del servicio 
+   * @param  {String} accessSecret Access Secret del servicio
+   * @return {Promise<Object>} Una promesa con el gestor
+   */
   static forService(service, accessToken, accessSecret){
     return new Promise((resolve, reject) => {
 

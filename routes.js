@@ -8,6 +8,9 @@ let Social = require('./index.js');
 
 let log;
 
+/**
+ * @module tb-social/routes
+ */
 function setupRoutes(App){
 
   log = App.log.child({module:'socialRoute'});
@@ -22,6 +25,25 @@ function setupRoutes(App){
   });
 
 
+
+  /**
+   * Realiza una publicación en una red social
+   *
+   * @name Publicar en red social
+   *
+   * @route  {POST} srv/social/post
+   * 
+   * @queryparam {String} service  Servicio de social (valores: facebook, twitter, gplus, linkedin) 
+   * 
+   * @bodyparam  {String}   token          El access token del usuario
+   * @bodyparam  {String}   [tokenSecret]  (Sólo para twitter) Access Token Secret del token del usuario.
+   * @bodyparam  {Object}   data           Objeto con la información que se va a publicar.
+   * @bodyparam  {String}   data.message   Mensaje que se quiere publicar
+   * @bodyparam  {String}   [data.link]    Link que se incluirá en la publicación
+   * 
+   * @return {Object}  Informacion del post realizado
+   * 
+   */
   router.post("/post",function(req, res, next){
     var ctx = req._ctx;
     let service = ctx.resource;
