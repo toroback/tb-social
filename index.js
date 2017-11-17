@@ -31,6 +31,7 @@
  *
  * @description 
  *
+ * Modulo de Social
  * <p>
  * Esta módulo permite realizar publicaciones en distintas redes sociales como Facebook, Twitter, Google Plus y LinkedIn
  * 
@@ -48,10 +49,7 @@
  * @see [Class API]{@link module:tb-social.Client} (API interno).
  * @see Repositorio en {@link https://github.com/toroback/tb-social|GitHub}.
  * </p>
- * 
- * Modulo de Social
  *
- * @module tb-social 
  */
 
 
@@ -132,28 +130,28 @@ class Client {
       if(service){
         switch (service) {
           case "facebook":
-            credentials = App.socialOptions.fb;
-            if(!credentials || !credentials.secretKey || !credentials.clientId)
-               throw new Error('fb options must be configured');
+            credentials = App.socialOptions.facebook;
+            if(!credentials || !credentials.appSecret || !credentials.appId)
+               throw new Error('facebook options must be configured');
 
             adapter = require('tb-social-facebook');
             options = {
-              appId      : credentials.clientId, 
-              appSecret  : credentials.secretKey,
+              appId      : credentials.appId, 
+              appSecret  : credentials.appSecret,
               accessToken: accessToken,
               timeout    : 2 * 1000 
             }
         
             break;
           case "twitter":
-           credentials = App.socialOptions.tw;
-            if(!credentials || !credentials.secretKey || !credentials.clientId)
-               throw new Error('tw options must be configured');
+           credentials = App.socialOptions.twitter;
+            if(!credentials || !credentials.consumerSecret || !credentials.consumerKey)
+               throw new Error('twitter options must be configured');
 
             adapter = require('tb-social-twitter');
             options = {
-              consumerKey         : credentials.clientId, 
-              consumerSecret      : credentials.secretKey,
+              consumerKey         : credentials.consumerKey, 
+              consumerSecret      : credentials.consumerSecret,
               accessToken         : accessToken,
               accessTokenSecret   : accessSecret,
               timeout             : 60*1000
@@ -161,26 +159,26 @@ class Client {
             break;
           case "gplus":
             credentials = App.socialOptions.gplus;
-            if(!credentials || !credentials.secretKey || !credentials.clientId)
+            if(!credentials || !credentials.clientSecret || !credentials.clientId)
                throw new Error('gplus options must be configured');
 
             adapter = require('tb-social-googleplus');
             options = {
               clientId      : credentials.clientId, 
-              clientSecret  : credentials.secretKey,
+              clientSecret  : credentials.clientSecret,
               accessToken   : accessToken,
               idToken       : accessSecret
             }
             break;
           case "linkedin":
            credentials = App.socialOptions.linkedin;
-            if(!credentials || !credentials.secretKey || !credentials.clientId)
+            if(!credentials || !credentials.clientSecret || !credentials.clientId)
                throw new Error('linkedin options must be configured');
 
             adapter = require('tb-social-linkedin');
             options = {
               clientId      : credentials.clientId, 
-              clientSecret  : credentials.secretKey,
+              clientSecret  : credentials.clientSecret,
               accessToken   : accessToken
             }
             break;
@@ -193,7 +191,7 @@ class Client {
       if(client){
         resolve(client);
       }else{
-        reject(new Error('Service not exists'));
+        reject(new Error('Service does not exist'));
       }
     });
   }
