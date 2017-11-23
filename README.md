@@ -41,6 +41,19 @@ Cada servicio requeire distintos campos que rellenar:
   + Client Secret
 
 
+- **Vimeo:**
+  + Client Id
+  + Client Secret
+  + Access token (Opcional)
+
+
+- **Flickr:**
+  + Client Key
+  + Client Secret
+  + Access token (Opcional)
+  + Access Secret (Opcional)
+
+
 ### **- Configuracion manual:**
 
 La configuración de cualquier servicio se realizar en el archivo _**config.json**_ que se encuentra en la carpeta  _**app**_. Para ellos hay que incluir y modificar un objeto llamado _**socialOptions**_ y agregar un objeto interno para cada servicio que se utilizará que contendrá las credenciales. La clave de cada objeto será especial para cada servicio usando las siguientes claves para cada servicio:
@@ -48,6 +61,8 @@ La configuración de cualquier servicio se realizar en el archivo _**config.json
 - Twitter  -> _**twitter**_
 - Google+  -> _**gplus**_
 - LinkedIn -> _**linkedin**_
+- Vimeo -> _**vimeo**_
+- Flickr -> _**flickr**_
 
 La información que contendrá cada objeto depende del servicio, pero en general todos necesitan:
 - Un identificador de la aplicación registsrada en el servicio.
@@ -72,6 +87,17 @@ El nombre para cada uno de dichos campos para cada servicio, se muestra junto co
   "linkedin": {
     "clientId": myLinkedInClientId,
     "clientSecret": myLinkedInSecretKey
+  },
+ "vimeo":{
+    "clientId": "myVimeoClientId",
+    "clientSecret": "myVimeoClientSecret",
+    "accessToken": "myVimeoDefaultAccessToken"
+  },
+  "flickr":{
+    "clientKey": "myFlickrClientKey",
+    "clientSecret": "myFlickrClientSecret",
+    "accessToken": "myFlickrDefaultAccessToken",
+    "accessSecret": "myFlickrDefaultAccessSecret"
   }
 }
 ...
@@ -104,7 +130,7 @@ Realizando peticiones a los servicios de social con el siguiente formato de URL:
 
 A continuación se detallarán las funcionalidades de las que dispone el módulo.
 
-### **- Hacer una publicación:**
+### **- Hacer una publicación / Subir un archivo:**
 
 #### **• REST Api:**
 
@@ -112,7 +138,7 @@ A continuación se detallarán las funcionalidades de las que dispone el módulo
 
 |HTTP Method|URL|
 |:---:|:---|
-|POST | `https://[domain]:[port]/api/v[apiVersion]/srv/social/post?service=<service>` |
+|POST / POST Multipart| `https://[domain]:[port]/api/v[apiVersion]/srv/social/post?service=<service>` |
 
 
 **Parámetros del query:**
@@ -126,11 +152,15 @@ A continuación se detallarán las funcionalidades de las que dispone el módulo
 
 | Clave | Tipo | Opcional   | Descripción  |
 |---|---|:---:|---|
+| fileUpload  |  File  | X | (Sólo para POST Multipart) El archivo que se va a subir  |
 | token  |  String  |   | El access token del usuario  |
 | tokenSecret  |  String  | X | (Sólo para twitter) Access Token Secret del token del usuario.  |
 | data  |  Object  |   | Objeto con la información que se va a publicar.  |
 | data.message  |  String  |   | Mensaje que se quiere publicar |
 | data.link   |  String  | X |  Link que se incluirá en la publicación  |
+| data.title   |  String  | X |  Título que se incluirá en la publicación de archivos  |
+| data.description   |  String  | X |  Descripción que se incluirá en la publicación de archivos  |
+| data.private   |  Boolean  | X |  Indica si la publicación será privada o no (Vimeo, Flickr)  |
 
 
 **Respuesta:**
@@ -138,7 +168,7 @@ A continuación se detallarán las funcionalidades de las que dispone el módulo
 Actualmente la respuesta varía en función del servicio por el que se realiza la publicación.
 
 
-**Ejemplo:**
+**Ejemplo Publicacíon Twitter:**
 
 * Petición:
 ```
@@ -154,6 +184,60 @@ Actualmente la respuesta varía en función del servicio por el que se realiza l
     {
       "message":"Test post",
       "link":"https://www.google.com"
+    }
+ } 
+ ```
+
+ **Ejemplo Subida de archivo Vimeo (Multipart):**
+
+* Petición:
+```
+ POST Multipart:  http://a2server.a2system.net:1234/api/v1/srv/social/post?service=vimeo
+```
+
+* Parámetros Multipart:
+```js
+ "fileUpload": <archivo a subir> 
+ "token":"userVimeoToken"
+ "data.title": "My video title"
+ "data.description": "My video description"
+ "data.private": "true"
+```
+
+ **Ejemplo Publicación desde link Vimeo:**
+
+* Petición:
+```
+ POST Multipart:  http://a2server.a2system.net:1234/api/v1/srv/social/post?service=vimeo
+```
+
+ó
+
+```
+ POST:  http://a2server.a2system.net:1234/api/v1/srv/social/post?service=vimeo
+```
+
+
+* Parámetros Multipart:
+```js
+ "link": <link a video a subir> 
+ "token":"userVimeoToken"
+ "data.title": "My video title"
+ "data.description": "My video description"
+ "data.private": "true"
+```
+
+ó
+
+```js
+{
+  "token":"userVimeoToken",
+  "data":
+    {
+      "title":"My video title",
+      "description": "My video description",
+      "link":"https://www.google.com"
+      "private": true
     }
  } 
  ```
@@ -178,6 +262,10 @@ En primer lugar hay que obtener un objeto para realizar utilizar el servicio com
 |data|Object| |Objeto con la información que se va a publicar.|
 |data.message|String| |Mensaje que se quiere publicar|
 |data.link|String| X |Link que se incluirá en la publicación|
+| data.title   |  String  | X |  Título que se incluirá en la publicación de archivos  |
+| data.description   |  String  | X |  Descripción que se incluirá en la publicación de archivos  |
+| data.private   |  Boolean  | X |  Indica si la publicación será privada o no (Vimeo, Flickr)  |
+| data.file   |  File  | X |  Archivo que se va a subir (Vimeo, Flickr)  |
 
 ##### **- Ejemplo:**
 

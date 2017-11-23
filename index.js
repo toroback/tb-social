@@ -77,6 +77,10 @@ class Client {
    * @param  {Object} options Opciones del post
    * @param  {String} options.message Mensaje que se va a publicar
    * @param  {String} [options.link] Link que se incluirá en la publicación
+   * @param  {String} [options.title]        Título que se incluirá en la publicación (Vimeo)
+   * @param  {String} [options.description]  Descripción que se incluirá en la publicación (Vimeo)
+   * @param  {Boolean} [options.private]      Indica si la publicación será privada o no (Vimeo)
+   * @param  {File} [options.file]      Archivo que se va a subir (Vimeo, Flickr)
    * @return {Mixed} Respuesta que varía según el servicio
    */
   post(options) {
@@ -171,7 +175,7 @@ class Client {
             }
             break;
           case "linkedin":
-           credentials = App.socialOptions.linkedin;
+            credentials = App.socialOptions.linkedin;
             if(!credentials || !credentials.clientSecret || !credentials.clientId)
                throw new Error('linkedin options must be configured');
 
@@ -180,6 +184,38 @@ class Client {
               clientId      : credentials.clientId, 
               clientSecret  : credentials.clientSecret,
               accessToken   : accessToken
+            }
+            break;
+          case "vimeo":
+            credentials = App.socialOptions.vimeo;
+            if(!credentials || !credentials.clientSecret || !credentials.clientId)
+               throw new Error('vimeo options must be configured');
+
+            if(!accessToken && !credentials.accessToken) 
+              throw new Error('vimeo accessToken needed');
+
+            adapter = require('tb-social-vimeo');
+            options = {
+              clientId      : credentials.clientId, 
+              clientSecret  : credentials.clientSecret,
+              accessToken   : accessToken || credentials.accessToken
+            }
+            break;
+
+          case "flickr":
+            credentials = App.socialOptions.flickr;
+            if(!credentials || !credentials.clientSecret || !credentials.clientKey)
+               throw new Error('flickr options must be configured');
+
+            if((!accessToken && !credentials.accessToken) || (!accessSecret && !credentials.accessSecret)) 
+              throw new Error('flickr accessToken needed');
+
+            adapter = require('tb-social-flickr');
+            options = {
+              clientKey      : credentials.clientKey, 
+              clientSecret  : credentials.clientSecret,
+              accessToken   : accessToken || credentials.accessToken,
+              accessSecret  : accessSecret || credentials.accessSecret
             }
             break;
         }
