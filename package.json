@@ -1,6 +1,6 @@
 {
   "name": "tb-social",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Social client",
   "main": "index.js",
   "scripts": {
