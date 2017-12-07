@@ -10,16 +10,18 @@ Módulos de servicios:
 - tb-social-twitter
 - tb-social-gplus
 - tb-social-linkedin
+- tb-social-vimeo
+- tb-social-flickr
 
 ## **Configuración**
   
-### **- Desde la interfaz de administración A2Server:**
+### **- Configuración desde interfaz administrativa:** 
 
 En la aplicación seleccionada acceder a la sección "Configuración" y luego a la pestaña "Social".
 
 Una vez en la pestaña se pueden observar las secciones para completar los distintos servicios.
 
-Cada servicio requeire distintos campos que rellenar:
+Cada servicio requiere distintos campos que rellenar:
 
 - **Facebook:**
   + Application ID
@@ -53,8 +55,7 @@ Cada servicio requeire distintos campos que rellenar:
   + Access token (Opcional)
   + Access Secret (Opcional)
 
-
-### **- Configuracion manual:**
+### **- Configuración manual:**
 
 La configuración de cualquier servicio se realizar en el archivo _**config.json**_ que se encuentra en la carpeta  _**app**_. Para ellos hay que incluir y modificar un objeto llamado _**socialOptions**_ y agregar un objeto interno para cada servicio que se utilizará que contendrá las credenciales. La clave de cada objeto será especial para cada servicio usando las siguientes claves para cada servicio:
 - Facebook -> _**facebook**_
@@ -65,8 +66,8 @@ La configuración de cualquier servicio se realizar en el archivo _**config.json
 - Flickr -> _**flickr**_
 
 La información que contendrá cada objeto depende del servicio, pero en general todos necesitan:
-- Un identificador de la aplicación registsrada en el servicio.
-- Una clave secreta de la aplicación registsrada en el servicio.
+- Un identificador de la aplicación registrada en el servicio.
+- Una clave secreta de la aplicación registrada en el servicio.
 
 El nombre para cada uno de dichos campos para cada servicio, se muestra junto con un ejemplo a continuación:
 ```javascript
@@ -88,7 +89,7 @@ El nombre para cada uno de dichos campos para cada servicio, se muestra junto co
     "clientId": myLinkedInClientId,
     "clientSecret": myLinkedInSecretKey
   },
- "vimeo":{
+  "vimeo":{
     "clientId": "myVimeoClientId",
     "clientSecret": "myVimeoClientSecret",
     "accessToken": "myVimeoDefaultAccessToken"
@@ -107,9 +108,9 @@ El nombre para cada uno de dichos campos para cada servicio, se muestra junto co
 
 Los servicios se pueden utilizar de dos maneras:
 
-### **- Mediante llamadas internas al modelo (Servidor):**
+### **- Mediante Class Api del modelo (Servidor):**
 
-Las llamadas internas se realizan utilizando las funciones del módulo _**social**_ accediendo a él a través del objeto global _**App**_ como en el siguiente ejemplo.
+Las llamadas al Class Api se realizan utilizando las funciones del módulo _**social**_ accediendo a él a través del objeto global _**App**_ como en el siguiente ejemplo.
 
 ```js
 var service = "facebook"; // Servicio
@@ -167,15 +168,16 @@ A continuación se detallarán las funcionalidades de las que dispone el módulo
 
 Actualmente la respuesta varía en función del servicio por el que se realiza la publicación.
 
-
-**Ejemplo Publicacíon Twitter:**
+##### **Ejemplo Publicación Twitter:**
 
 * Petición:
+
 ```
  POST:  http://a2server.a2system.net:1234/api/v1/srv/social/post?service=twitter
 ```
 
 * Body:
+
 ```js
 {
   "token":"1xxxx377xx-OI3dlxxxxyI3tRzvczGxxxZtcyCxsvo8qxxxxli",
@@ -188,14 +190,16 @@ Actualmente la respuesta varía en función del servicio por el que se realiza l
  } 
  ```
 
- **Ejemplo Subida de archivo Vimeo (Multipart):**
+#####  **Ejemplo Subida de archivo Vimeo (Multipart):**
 
 * Petición:
+
 ```
  POST Multipart:  http://a2server.a2system.net:1234/api/v1/srv/social/post?service=vimeo
 ```
 
 * Parámetros Multipart:
+
 ```js
  "fileUpload": <archivo a subir> 
  "token":"userVimeoToken"
@@ -204,9 +208,10 @@ Actualmente la respuesta varía en función del servicio por el que se realiza l
  "data.private": "true"
 ```
 
- **Ejemplo Publicación desde link Vimeo:**
+#####  **Ejemplo Publicación desde link Vimeo:**
 
 * Petición:
+
 ```
  POST Multipart:  http://a2server.a2system.net:1234/api/v1/srv/social/post?service=vimeo
 ```
@@ -219,6 +224,7 @@ Actualmente la respuesta varía en función del servicio por el que se realiza l
 
 
 * Parámetros Multipart:
+
 ```js
  "link": <link a video a subir> 
  "token":"userVimeoToken"
@@ -243,6 +249,7 @@ Actualmente la respuesta varía en función del servicio por el que se realiza l
  ```
 
 #### **• Código Javascript:**  
+
 En primer lugar hay que obtener un objeto para realizar utilizar el servicio como se explica en la sección "Modo de uso" y luego realizar la publicación.
 
 
